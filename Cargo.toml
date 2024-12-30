@@ -1,0 +1,3 @@
+workspace = { members = [ "log-log4cplus", "log4cplus","log4plus-sys", "tracing-log4cplus"] }
+[workspaces]
+members = ["log4cplus-sys", "log4cplus", "tracing-log4cplus", "log-log4plus"]
