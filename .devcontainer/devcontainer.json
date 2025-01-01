@@ -3,7 +3,7 @@
 {
   "name": "Rust",
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/rust:1-1-bullseye",
+  "dockerFile": "Dockerfile",
 
   // Use 'mounts' to make the cargo cache persistent in a Docker Volume.
   // "mounts": [
@@ -15,16 +15,23 @@
   // ]
 
   // Features to add to the dev container. More info: https://containers.dev/features.
-  // "features": {},
+  "features": {},
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  // "postCreateCommand": "rustc --version",
+  "postCreateCommand": "conan profile detect",
 
   // Configure tool-specific properties.
-  // "customizations": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "konicy.conan-extension",
+        "ms-vscode.cpptools-extension-pack"
+      ]
+    }
+  },
 
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "root"
