@@ -1,6 +1,3 @@
-mod tstring;
-pub use tstring::TString;
-
 #[cxx::bridge(namespace = "log4cplus")]
 mod ffi {
     unsafe extern "C++" {
@@ -42,66 +39,17 @@ mod ffi {
     }
 }
 
+mod tstring;
+pub use tstring::TString;
+
+mod initializer;
+pub use initializer::Initializer;
+
+mod basic_configurator;
+pub use basic_configurator::BasicConfigurator;
+
+mod log_level;
+pub use log_level::LogLevel;
+
 mod logger;
 pub use logger::Logger;
-
-pub struct Initializer(cxx::UniquePtr<ffi::Initializer>);
-
-impl Initializer {
-    pub fn new() -> Self {
-        Self(ffi::initializer_new())
-    }
-}
-
-impl Default for Initializer {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-pub struct BasicConfigurator(cxx::UniquePtr<ffi::BasicConfigurator>);
-
-impl BasicConfigurator {
-    pub fn new() -> Self {
-        Self(ffi::basic_configurator_new())
-    }
-
-    pub fn configure(&mut self) {
-        self.0.pin_mut().configure();
-    }
-}
-
-impl Default for BasicConfigurator {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-/// Equivalent to log4cplus::LogLevel: <https://log4cplus.github.io/log4cplus/docs/log4cplus-2.1.0/doxygen/namespacelog4cplus.html#abd332cc8c98fefcbbdcf57b6b3867de9>
-pub enum LogLevel {
-    Off,
-    Fatal,
-    Error,
-    Warn,
-    Info,
-    Debug,
-    Trace,
-    All,
-    NotSet,
-}
-
-impl From<LogLevel> for i32 {
-    fn from(log_level: LogLevel) -> i32 {
-        match log_level {
-            LogLevel::Off => 60000,
-            LogLevel::Fatal => 50000,
-            LogLevel::Error => 40000,
-            LogLevel::Warn => 30000,
-            LogLevel::Info => 20000,
-            LogLevel::Debug => 10000,
-            LogLevel::Trace => 0,
-            LogLevel::All => 0,
-            LogLevel::NotSet => -1,
-        }
-    }
-}
