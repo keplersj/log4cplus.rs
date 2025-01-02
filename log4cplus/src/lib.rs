@@ -1,7 +1,5 @@
-pub mod tstring;
+mod tstring;
 pub use tstring::TString;
-
-use std::ffi::CStr;
 
 #[cxx::bridge(namespace = "log4cplus")]
 mod ffi {
@@ -43,6 +41,9 @@ mod ffi {
         );
     }
 }
+
+mod logger;
+pub use logger::Logger;
 
 pub struct Initializer(cxx::UniquePtr<ffi::Initializer>);
 
@@ -102,35 +103,5 @@ impl From<LogLevel> for i32 {
             LogLevel::All => 0,
             LogLevel::NotSet => -1,
         }
-    }
-}
-
-pub struct Logger(cxx::UniquePtr<ffi::Logger>);
-
-impl Logger {
-    pub fn new(name: &str) -> Self {
-        Self::get_instance(name)
-    }
-
-    pub fn get_instance(name: impl Into<TString>) -> Self {
-        let tstr: TString = name.into();
-        Self(ffi::Logger_getInstance(tstr.as_ref()))
-    }
-
-    pub fn log(
-        &self,
-        log_level: LogLevel,
-        message: impl Into<TString>,
-        file: &CStr,
-        line: u32,
-        function: &CStr,
-    ) {
-        let file = file.as_ptr();
-        let function = function.as_ptr();
-        let tstr = message.into();
-        unsafe {
-            self.0
-                .log(log_level.into(), tstr.as_ref(), file, line as i32, function)
-        };
     }
 }

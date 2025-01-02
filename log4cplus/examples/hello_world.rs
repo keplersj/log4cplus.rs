@@ -1,5 +1,4 @@
 use log4cplus::{BasicConfigurator, Initializer, LogLevel, Logger};
-use std::ffi::CString;
 
 /// Rust version of <https://github.com/log4cplus/log4cplus/wiki/Code-Examples#hello-world>
 fn main() {
@@ -9,74 +8,13 @@ fn main() {
     configurator.configure();
 
     let logger = Logger::get_instance("hello_world");
-    logger.log(
-        LogLevel::All,
-        "hello all",
-        &CString::new(file!()).unwrap(),
-        line!(),
-        &CString::new("main").unwrap(),
-    );
-    logger.log(
-        LogLevel::Debug,
-        "hello debug",
-        &CString::new(file!()).unwrap(),
-        line!(),
-        &CString::new("main").unwrap(),
-    );
-    logger.log(
-        LogLevel::Error,
-        "hello error",
-        &CString::new(file!()).unwrap(),
-        line!(),
-        &CString::new("main").unwrap(),
-    );
-    logger.log(
-        LogLevel::Error,
-        "hello error",
-        &CString::new(file!()).unwrap(),
-        line!(),
-        &CString::new("main").unwrap(),
-    );
-    logger.log(
-        LogLevel::Fatal,
-        "hello fatal",
-        &CString::new(file!()).unwrap(),
-        line!(),
-        &CString::new("main").unwrap(),
-    );
-    logger.log(
-        LogLevel::Info,
-        "hello info",
-        &CString::new(file!()).unwrap(),
-        line!(),
-        &CString::new("main").unwrap(),
-    );
-    logger.log(
-        LogLevel::NotSet,
-        "hello notset",
-        &CString::new(file!()).unwrap(),
-        line!(),
-        &CString::new("main").unwrap(),
-    );
-    logger.log(
-        LogLevel::Off,
-        "hello off",
-        &CString::new(file!()).unwrap(),
-        line!(),
-        &CString::new("main").unwrap(),
-    );
-    logger.log(
-        LogLevel::Trace,
-        "hello trace",
-        &CString::new(file!()).unwrap(),
-        line!(),
-        &CString::new("main").unwrap(),
-    );
-    logger.log(
-        LogLevel::Warn,
-        "hello warn",
-        &CString::new(file!()).unwrap(),
-        line!(),
-        &CString::new("main").unwrap(),
-    );
+    logger.log(LogLevel::All, "hello all", file!(), line!(), "main");
+    logger.log(LogLevel::Debug, "hello debug", file!(), line!(), "main");
+    logger.log(LogLevel::Error, "hello error", file!(), line!(), "main");
+    logger.log(LogLevel::Fatal, "hello fatal", file!(), line!(), "main");
+    logger.log(LogLevel::Info, "hello info", file!(), line!(), "main");
+    logger.log(LogLevel::NotSet, "hello notset", file!(), line!(), "main");
+    logger.log(LogLevel::Off, "hello off", file!(), line!(), "main");
+    logger.log(LogLevel::Trace, "hello trace", file!(), line!(), "main");
+    logger.log(LogLevel::Warn, "hello warn", file!(), line!(), "main");
 }
