@@ -40,4 +40,11 @@ namespace log4cplus
 
         return std::make_unique<log4cplus::tstring>(tstr);
     }
+
+    inline std::unique_ptr<std::string> tstring_to_string(const log4cplus::tstring &tstr)
+    {
+        std::string str = LOG4CPLUS_TSTRING_TO_STRING(tstr);
+
+        return std::make_unique<std::string>(str);
+    }
 }

@@ -1,3 +1,6 @@
+pub mod tstring;
+pub use tstring::TString;
+
 use std::ffi::CStr;
 
 #[cxx::bridge(namespace = "log4cplus")]
@@ -25,6 +28,7 @@ mod ffi {
         // It's use of c_char requiring `unsafe` is less than ideal
         #[allow(dead_code)]
         unsafe fn cstr_to_tstring(str: *const c_char) -> UniquePtr<TString>;
+        fn tstring_to_string(str: &TString) -> UniquePtr<CxxString>;
 
         type Logger;
         fn Logger_getInstance(name: &TString) -> UniquePtr<Logger>;
@@ -72,7 +76,7 @@ impl Default for BasicConfigurator {
     }
 }
 
-/// Equivalent to log4cplus::LogLevel: <https://log4cplus.github.io/log4cplus/docs/log4cplus-2.1.0/doxygen/namespacelog4cplus.html#abd332cc8c98fefcbbdcf57b6b3867de9
+/// Equivalent to log4cplus::LogLevel: <https://log4cplus.github.io/log4cplus/docs/log4cplus-2.1.0/doxygen/namespacelog4cplus.html#abd332cc8c98fefcbbdcf57b6b3867de9>
 pub enum LogLevel {
     Off,
     Fatal,
@@ -101,17 +105,6 @@ impl From<LogLevel> for i32 {
     }
 }
 
-pub struct TString(cxx::UniquePtr<ffi::TString>);
-
-impl TString {
-    pub fn new(s: impl AsRef<[u8]>) -> Self {
-        cxx::let_cxx_string!(cxxstr = s);
-        let ptr = ffi::string_to_tstring(&cxxstr);
-
-        Self(ptr)
-    }
-}
-
 pub struct Logger(cxx::UniquePtr<ffi::Logger>);
 
 impl Logger {
@@ -119,23 +112,25 @@ impl Logger {
         Self::get_instance(name)
     }
 
-    pub fn get_instance(name: &str) -> Self {
-        let tstr = TString::new(name);
-        Self(ffi::Logger_getInstance(tstr.0.as_ref().unwrap()))
+    pub fn get_instance(name: impl Into<TString>) -> Self {
+        let tstr: TString = name.into();
+        Self(ffi::Logger_getInstance(tstr.as_ref()))
     }
 
-    pub fn log(&self, log_level: LogLevel, message: &str, file: &CStr, line: u32, function: &CStr) {
+    pub fn log(
+        &self,
+        log_level: LogLevel,
+        message: impl Into<TString>,
+        file: &CStr,
+        line: u32,
+        function: &CStr,
+    ) {
         let file = file.as_ptr();
         let function = function.as_ptr();
-        let tstr = TString::new(message);
+        let tstr = message.into();
         unsafe {
-            self.0.log(
-                log_level.into(),
-                tstr.0.as_ref().unwrap(),
-                file,
-                line as i32,
-                function,
-            )
+            self.0
+                .log(log_level.into(), tstr.as_ref(), file, line as i32, function)
         };
     }
 }
