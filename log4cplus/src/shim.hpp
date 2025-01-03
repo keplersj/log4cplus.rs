@@ -16,17 +16,6 @@ namespace log4cplus
         // return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
 
-    // `cxx` Doesn't currently support static class members, so we wrap it and expose it for easy Rust consumption
-    inline std::unique_ptr<Logger> Logger_getInstance(const log4cplus::tstring &name)
-    {
-        Logger logger = log4cplus::Logger::getInstance(name);
-
-        // C++14
-        return std::make_unique<Logger>(logger);
-        // C++11
-        // return std::unique_ptr<Logger>(new Logger(logger));
-    }
-
     inline std::unique_ptr<log4cplus::tstring> string_to_tstring(const std::string &str)
     {
         log4cplus::tstring tstr = LOG4CPLUS_STRING_TO_TSTRING(str);

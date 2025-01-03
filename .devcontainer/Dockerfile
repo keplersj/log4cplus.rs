@@ -6,7 +6,7 @@ RUN apt-get update \
     # Install
     && apt-get -y install \
     python3-pip \
-    cmake \
+    cmake clang \
     # Clean up
     && apt-get autoremove -y \
     && apt-get clean -y \

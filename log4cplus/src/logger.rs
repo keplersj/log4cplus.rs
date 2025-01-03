@@ -1,11 +1,12 @@
-use super::ffi;
+use super::ffi::log4cplus::Logger as FFI;
 use crate::{LogLevel, TString};
+use autocxx::WithinUniquePtr;
 use std::ffi::CString;
 
-pub struct Logger(cxx::UniquePtr<ffi::Logger>);
+pub struct Logger(cxx::UniquePtr<FFI>);
 
-impl AsRef<ffi::Logger> for Logger {
-    fn as_ref(&self) -> &ffi::Logger {
+impl AsRef<FFI> for Logger {
+    fn as_ref(&self) -> &FFI {
         &self.0
     }
 }
@@ -17,7 +18,7 @@ impl Logger {
 
     pub fn get_instance(name: impl Into<TString>) -> Self {
         let tstr: TString = name.into();
-        Self(ffi::Logger_getInstance(tstr.as_ref()))
+        Self(FFI::getInstance(tstr.as_ref()).within_unique_ptr())
     }
 
     pub fn log(
@@ -33,10 +34,10 @@ impl Logger {
         let tstr = message.into();
         unsafe {
             self.as_ref().log(
-                log_level.into(),
+                autocxx::c_int(log_level.into()),
                 tstr.as_ref(),
                 file.as_ptr(),
-                line as i32,
+                autocxx::c_int(line as i32),
                 function.as_ptr(),
             )
         };

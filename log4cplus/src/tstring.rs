@@ -1,7 +1,7 @@
-use super::ffi;
+use super::ffi::log4cplus::{string_to_tstring, tstring as FFI, tstring_to_string};
 use std::fmt::{self, Display};
 
-pub struct TString(cxx::UniquePtr<ffi::TString>);
+pub struct TString(cxx::UniquePtr<FFI>);
 
 impl TString {
     pub fn new(s: impl AsRef<[u8]>) -> Self {
@@ -24,21 +24,21 @@ where
         // Create a CxxString from the input, then convert it to a TString
         // This codepath doesn't require `unsafe`
         cxx::let_cxx_string!(cxxstr = s);
-        let ptr = ffi::string_to_tstring(&cxxstr);
+        let ptr = string_to_tstring(&cxxstr);
 
         Self(ptr)
     }
 }
 
-impl AsRef<ffi::TString> for TString {
-    fn as_ref(&self) -> &ffi::TString {
+impl AsRef<FFI> for TString {
+    fn as_ref(&self) -> &FFI {
         &self.0
     }
 }
 
 impl Display for TString {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let cxxstr = ffi::tstring_to_string(self.as_ref());
+        let cxxstr = tstring_to_string(self.as_ref());
 
         f.write_str(cxxstr.to_str().map_err(|_| fmt::Error)?)
     }

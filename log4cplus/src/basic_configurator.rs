@@ -1,10 +1,10 @@
-use super::ffi;
+use super::ffi2::{basic_configurator_new, BasicConfigurator as FFI};
 
-pub struct BasicConfigurator(cxx::UniquePtr<ffi::BasicConfigurator>);
+pub struct BasicConfigurator(cxx::UniquePtr<FFI>);
 
 impl BasicConfigurator {
     pub fn new() -> Self {
-        Self(ffi::basic_configurator_new())
+        Self(basic_configurator_new())
     }
 
     pub fn configure(&mut self) {
@@ -18,8 +18,8 @@ impl Default for BasicConfigurator {
     }
 }
 
-impl AsRef<ffi::BasicConfigurator> for BasicConfigurator {
-    fn as_ref(&self) -> &ffi::BasicConfigurator {
+impl AsRef<FFI> for BasicConfigurator {
+    fn as_ref(&self) -> &FFI {
         &self.0
     }
 }

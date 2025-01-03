@@ -1,9 +1,10 @@
 use conan2::ConanInstall;
-use miette::Result;
+use miette::{IntoDiagnostic, Result};
+use std::path::PathBuf;
 
 fn main() -> Result<()> {
     println!("cargo:rerun-if-changed=build.rs");
-    println!("cargo:rerun-if-changed=src");
+    println!("cargo:rerun-if-changed=src/lib.rs");
 
     let metadata = ConanInstall::new()
         .build("missing")
@@ -11,9 +12,11 @@ fn main() -> Result<()> {
         .run()
         .parse();
 
-    cxx_build::bridge("src/lib.rs") // returns a cc::Build
-        .includes(metadata.include_paths())
-        .include("src")
+    let includes = [vec![PathBuf::from("src")], metadata.include_paths()].concat();
+    autocxx_build::Builder::new("src/lib.rs", &includes)
+        .build()
+        .into_diagnostic()?
+        // .flag_if_supported("-std=c++14")
         // Minimum needed for contructor shim in shim.hpp
         .std("c++14")
         // Building without Unicode/widestring support is inexplicable broken.

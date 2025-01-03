@@ -1,10 +1,12 @@
-use super::ffi;
+use super::ffi::log4cplus::Initializer as FFI;
+use autocxx::WithinUniquePtr;
+use cxx::UniquePtr;
 
-pub struct Initializer(cxx::UniquePtr<ffi::Initializer>);
+pub struct Initializer(UniquePtr<FFI>);
 
 impl Initializer {
     pub fn new() -> Self {
-        Self(ffi::initializer_new())
+        Self(FFI::new().within_unique_ptr())
     }
 }
 
@@ -14,8 +16,8 @@ impl Default for Initializer {
     }
 }
 
-impl AsRef<ffi::Initializer> for Initializer {
-    fn as_ref(&self) -> &ffi::Initializer {
+impl AsRef<FFI> for Initializer {
+    fn as_ref(&self) -> &FFI {
         &self.0
     }
 }

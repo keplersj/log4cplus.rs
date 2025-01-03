@@ -1,41 +1,33 @@
+use autocxx::prelude::*; // use all the main autocxx functions
+
+include_cpp! {
+    #include "log4cplus/logger.h"
+    #include "log4cplus/configurator.h"
+    #include "log4cplus/initializer.h"
+    #include "shim.hpp"
+    safety!(unsafe)
+    generate_pod!("log4cplus::LogLevel")
+    generate!("log4cplus::tstring")
+
+    generate!("log4cplus::Initializer")
+    generate!("log4cplus::BasicConfigurator")
+    generate!("log4cplus::Logger")
+
+    // shim.h
+    generate!("log4cplus::string_to_tstring")
+    generate!("log4cplus::tstring_to_string")
+}
+
 #[cxx::bridge(namespace = "log4cplus")]
-mod ffi {
+mod ffi2 {
     unsafe extern "C++" {
-        include!("log4cplus/tstring.h");
-        include!("log4cplus/logger.h");
         include!("log4cplus/configurator.h");
-        include!("log4cplus/initializer.h");
         include!("shim.hpp");
 
-        type Initializer;
-        #[rust_name = "initializer_new"]
-        fn construct_unique() -> UniquePtr<Initializer>;
-
-        type BasicConfigurator;
+        type BasicConfigurator = super::ffi::log4cplus::BasicConfigurator;
         #[rust_name = "basic_configurator_new"]
         fn construct_unique() -> UniquePtr<BasicConfigurator>;
         fn configure(self: Pin<&mut BasicConfigurator>);
-
-        #[cxx_name = "tstring"]
-        type TString;
-        fn string_to_tstring(str: &CxxString) -> UniquePtr<TString>;
-        // A valid conversion, could be helpful, not currently needed.
-        // It's use of c_char requiring `unsafe` is less than ideal
-        #[allow(dead_code)]
-        unsafe fn cstr_to_tstring(str: *const c_char) -> UniquePtr<TString>;
-        fn tstring_to_string(str: &TString) -> UniquePtr<CxxString>;
-
-        type Logger;
-        fn Logger_getInstance(name: &TString) -> UniquePtr<Logger>;
-        // The function signature's use of `*const c_char` requires the `unsafe`
-        unsafe fn log(
-            self: &Logger,
-            log_level: i32,
-            message: &TString,
-            file: *const c_char,
-            line: i32,
-            function: *const c_char,
-        );
     }
 }
 
