@@ -45,3 +45,5 @@ pub use log_level::LogLevel;
 
 mod logger;
 pub use logger::Logger;
+
+mod macros;
