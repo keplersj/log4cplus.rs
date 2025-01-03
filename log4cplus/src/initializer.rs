@@ -13,3 +13,9 @@ impl Default for Initializer {
         Self::new()
     }
 }
+
+impl AsRef<ffi::Initializer> for Initializer {
+    fn as_ref(&self) -> &ffi::Initializer {
+        &self.0
+    }
+}

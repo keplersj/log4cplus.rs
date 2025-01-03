@@ -17,3 +17,9 @@ impl Default for BasicConfigurator {
         Self::new()
     }
 }
+
+impl AsRef<ffi::BasicConfigurator> for BasicConfigurator {
+    fn as_ref(&self) -> &ffi::BasicConfigurator {
+        &self.0
+    }
+}

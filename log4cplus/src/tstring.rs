@@ -32,7 +32,7 @@ where
 
 impl AsRef<ffi::TString> for TString {
     fn as_ref(&self) -> &ffi::TString {
-        self.0.as_ref().expect("TString is null")
+        &self.0
     }
 }
 

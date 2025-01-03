@@ -6,7 +6,7 @@ pub struct Logger(cxx::UniquePtr<ffi::Logger>);
 
 impl AsRef<ffi::Logger> for Logger {
     fn as_ref(&self) -> &ffi::Logger {
-        self.0.as_ref().expect("Logger is null")
+        &self.0
     }
 }
 
