@@ -1,6 +1,7 @@
 use conan2::ConanInstall;
+use miette::Result;
 
-fn main() {
+fn main() -> Result<()> {
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-changed=src");
 
@@ -26,4 +27,6 @@ fn main() {
         .compile("log4cplus-bridge");
 
     metadata.emit();
+
+    Ok(())
 }

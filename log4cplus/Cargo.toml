@@ -6,9 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+autocxx = "0.27.0"
 cxx = "1.0.136"
 libc = "0.2.169"
 
 [build-dependencies]
+autocxx-build = "0.27.0"
 conan2 = "0.1"
 cxx-build = "1.0.136"
+miette = { version = "7.4.0", features = ["fancy"] }
