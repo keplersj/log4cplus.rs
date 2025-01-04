@@ -1,6 +1,7 @@
 use std::fmt::Display;
 
 use log::{debug, error, info, trace, warn};
+use log4cplus::{BasicConfigurator, Initializer, Logger};
 use rand::Rng;
 
 struct Razor;
@@ -49,11 +50,17 @@ pub fn shave_the_yak(yak: &mut Yak) {
     }
 }
 
-fn main() {
-    env_logger::builder()
-        .filter_level(log::LevelFilter::Trace)
-        .init();
+fn main() -> Result<(), log::SetLoggerError> {
+    let _initializer = Initializer::new();
+
+    let mut configurator = BasicConfigurator::new();
+    configurator.configure();
+
+    let logger = Logger::get_instance("yak_shaver");
+    log_log4cplus::Log4CPlusLogger::from(logger).try_init()?;
 
     let mut yak = Yak;
     shave_the_yak(&mut yak);
+
+    Ok(())
 }

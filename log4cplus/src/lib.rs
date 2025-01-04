@@ -18,6 +18,9 @@ include_cpp! {
     generate!("log4cplus::tstring_to_string")
 }
 
+unsafe impl Send for ffi::log4cplus::Logger {}
+unsafe impl Sync for ffi::log4cplus::Logger {}
+
 #[cxx::bridge(namespace = "log4cplus")]
 mod ffi2 {
     unsafe extern "C++" {
