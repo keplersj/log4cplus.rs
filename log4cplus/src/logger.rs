@@ -42,4 +42,8 @@ impl Logger {
             )
         };
     }
+
+    pub fn is_enabled_for(&self, log_level: LogLevel) -> bool {
+        self.as_ref().isEnabledFor(autocxx::c_int(log_level.into()))
+    }
 }

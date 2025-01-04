@@ -22,22 +22,25 @@ fn level_to_loglevel(level: Level) -> log4cplus::LogLevel {
 }
 
 impl Log for Log4CPlusLogger {
-    fn enabled(&self, _metadata: &Metadata) -> bool {
-        true
+    fn enabled(&self, metadata: &Metadata) -> bool {
+        self.logger
+            .is_enabled_for(level_to_loglevel(metadata.level()))
     }
 
     fn log(&self, record: &Record) {
-        self.logger.log(
-            level_to_loglevel(record.level()),
-            record.args().to_string(),
-            record.file().unwrap_or_default(),
-            record.line().unwrap_or_default(),
-            format!(
-                "{}::{}",
-                record.module_path().unwrap_or_default(),
-                record.target()
-            ),
-        );
+        if self.enabled(record.metadata()) {
+            self.logger.log(
+                level_to_loglevel(record.level()),
+                record.args().to_string(),
+                record.file().unwrap_or_default(),
+                record.line().unwrap_or_default(),
+                format!(
+                    "{}::{}",
+                    record.module_path().unwrap_or_default(),
+                    record.target()
+                ),
+            );
+        }
     }
 
     fn flush(&self) {}
