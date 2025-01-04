@@ -1,6 +1,7 @@
 use log::{Level, LevelFilter, Log, Metadata, Record};
 use log4cplus::Logger;
 
+#[derive(Default)]
 pub struct Log4CPlusLogger {
     logger: Logger,
 }
@@ -34,11 +35,7 @@ impl Log for Log4CPlusLogger {
                 record.args().to_string(),
                 record.file().unwrap_or_default(),
                 record.line().unwrap_or_default(),
-                format!(
-                    "{}::{}",
-                    record.module_path().unwrap_or_default(),
-                    record.target()
-                ),
+                record.module_path().unwrap_or_default(),
             );
         }
     }
