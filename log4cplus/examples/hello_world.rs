@@ -1,30 +1,36 @@
-use log4cplus::{
-    debug, error, fatal, function, info, trace, warn, BasicConfigurator, Initializer, LogLevel,
-    Logger,
-};
+use log4cplus::{warn, BasicConfigurator, Initializer, Logger};
 
 /// Rust version of <https://github.com/log4cplus/log4cplus/wiki/Code-Examples#hello-world>
+///
+/// This example is expected to match 1:1 with the following C++ code:
+///
+/// ```cpp
+/// #include <log4cplus/logger.h>
+/// #include <log4cplus/loggingmacros.h>
+/// #include <log4cplus/configurator.h>
+/// #include <log4cplus/initializer.h>
+///
+/// int
+/// main()
+/// {
+///     // Initialization and deinitialization.
+///     log4cplus::Initializer initializer;
+///
+///     log4cplus::BasicConfigurator config;
+///     config.configure();
+///
+///     log4cplus::Logger logger = log4cplus::Logger::getInstance(
+///         LOG4CPLUS_TEXT("main"));
+///     LOG4CPLUS_WARN(logger, LOG4CPLUS_TEXT("Hello, World!"));
+///     return 0;
+/// }
+/// ```
 fn main() {
     let _initializer = Initializer::new();
 
     let mut configurator = BasicConfigurator::new();
     configurator.configure();
 
-    let logger = Logger::get_instance("hello_world");
-    debug!(logger, "hello {} @ {}:{}", function!(), file!(), line!());
-    logger.log(LogLevel::All, "hello all", file!(), line!(), function!());
-    debug!(logger, "hello debug");
-    error!(logger, "hello error");
-    fatal!(logger, "hello fatal");
-    info!(logger, "hello info");
-    logger.log(
-        LogLevel::NotSet,
-        "hello notset",
-        file!(),
-        line!(),
-        function!(),
-    );
-    logger.log(LogLevel::Off, "hello off", file!(), line!(), function!());
-    trace!(logger, "hello trace");
-    warn!(logger, "hello warn");
+    let logger = Logger::get_instance("main");
+    warn!(logger, "Hello, World!");
 }
