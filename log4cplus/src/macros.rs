@@ -13,7 +13,7 @@ macro_rules! function {
 #[macro_export]
 macro_rules! log {
     ($level:expr, $logger:expr, $($msg:tt)*) => {{
-        $logger.log(log4cplus::LogLevel::from($level), std::format!($($msg)*), file!(), line!(), function!());
+        $logger.log(log4cplus::LogLevel::from($level), std::format!($($msg)*), std::file!(), std::line!(), log4cplus::function!());
     }};
     ($level:expr, $($msg:tt)*) => {{
         log4cplus::log!($level, log4cplus::Logger::default(), $($msg)*);
