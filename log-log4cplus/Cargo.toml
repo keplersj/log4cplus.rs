@@ -10,4 +10,4 @@ log = "0.4"
 log4cplus = { path = "../log4cplus" }
 
 [dev-dependencies]
-rand = "0.8.5"
+rand = "0.10.1"
